@@ -17,7 +17,7 @@ credentials: true
 }))
 
 // CONNECT DB
-mongoose.connect("mongodb+srv://gurukrushnasahoo45_db_user:JRWVe3sMgBSY6DVK@cluster0.pcshw9u.mongodb.net/reviewhall?retryWrites=true&w=majority")
+mongoose.connect("")
 .then(()=>console.log("MongoDB Connected ✅"))
 .catch(err=>console.log(err))
 
