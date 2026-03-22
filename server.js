@@ -6,10 +6,18 @@ const bcrypt = require("bcryptjs")
 const app = express()
 
 app.use(express.json())
-app.use(cors({ origin: "*" }))
+
+// ✅ FIXED CORS
+app.use(cors({
+origin: [
+"https://lustrous-moxie-30f173.netlify.app"
+],
+methods: ["GET","POST"],
+credentials: true
+}))
 
 // CONNECT DB
-mongoose.connect("mongodb://127.0.0.1:27017/reviewhall")
+mongoose.connect("mongodb+srv://gurukrushnasahoo45_db_user:JRWVe3sMgBSY6DVK@cluster0.pcshw9u.mongodb.net/reviewhall?retryWrites=true&w=majority")
 .then(()=>console.log("MongoDB Connected ✅"))
 .catch(err=>console.log(err))
 
@@ -29,6 +37,12 @@ const {username,email,password} = req.body
 
 if(!username || !email || !password){
 return res.json({message:"All fields required"})
+}
+
+// ✅ EMAIL FORMAT CHECK
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+if(!emailRegex.test(email)){
+return res.json({message:"Invalid email format"})
 }
 
 const existingUser = await User.findOne({email})
@@ -79,10 +93,13 @@ res.status(500).json({message:"Server error"})
 
 })
 
-app.listen(5000, ()=>{
-console.log("Server running on port 5000 🚀")
-})
-
+// ✅ ROUTES (MOVED BEFORE LISTEN)
 const favoriteRoutes = require("./routes/favorite")
-
 app.use("/api/favorites", favoriteRoutes)
+
+// ✅ FIXED PORT (VERY IMPORTANT FOR RENDER)
+const PORT = process.env.PORT || 5000
+
+app.listen(PORT, ()=>{
+console.log(`Server running on port ${PORT} 🚀`)
+})
